@@ -93,7 +93,9 @@ def evaluate(cal, label):
     return seg_within
 
 
+FT_WEIGHTS = sys.argv[2] if len(sys.argv) > 2 else 'apivae_weights_v2b_realft.pth'
+
 base = evaluate(infer_and_calibrate('apivae_weights_v2b.pth'), 'BASELINE: canonical v3-synthetic weights')
-ft = evaluate(infer_and_calibrate('apivae_weights_v2b_realft.pth'), 'FINE-TUNED on real pairs')
+ft = evaluate(infer_and_calibrate(FT_WEIGHTS), f'FINE-TUNED on real pairs ({FT_WEIGHTS})')
 print(f'\n================ GATE ================')
 print(f'segment within-granule delta corr: baseline {base:+.4f} -> fine-tuned {ft:+.4f}')

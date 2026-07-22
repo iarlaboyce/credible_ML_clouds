@@ -46,13 +46,18 @@ NOISE_LEVEL  = 0.01
 EARLY_STOP   = 8
 AGE_CONST    = 0.5
 MEAN_JACOBIAN = 21.13
-SEED = 42
+SEED = int(sys.argv[1]) if len(sys.argv) > 1 else 42
+SUFFIX = f'_seed{SEED}' if len(sys.argv) > 1 else ''
+
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
+np.random.seed(SEED)
 
 PAIRS_PATH   = os.path.join(BASE, 'data', 'modis_real', 'real_pairs.parquet')
 SCALERS_PATH = os.path.join(BASE, 'data', 'surrogate_scalers_retrained.npz')
 INIT_WEIGHTS = os.path.join(BASE, 'models', 'apivae_weights_v2b.pth')
-WEIGHTS_OUT  = os.path.join(BASE, 'models', 'apivae_weights_v2b_realft.pth')
-HISTORY_OUT  = os.path.join(BASE, 'results', 'apivae_v2b_realft_history.csv')
+WEIGHTS_OUT  = os.path.join(BASE, 'models', f'apivae_weights_v2b_realft{SUFFIX}.pth')
+HISTORY_OUT  = os.path.join(BASE, 'results', f'apivae_v2b_realft_history{SUFFIX}.csv')
 
 device = torch.device('cuda')
 print(f'Fine-tuning {INIT_WEIGHTS} -> {WEIGHTS_OUT}')
