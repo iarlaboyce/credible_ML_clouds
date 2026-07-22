@@ -16,6 +16,7 @@ Each script maps to a specific result in the paper:
 | `real_data_inference.py` | Shared inference + per-granule calibration for the real-data study |
 | `delta_skill_eval.py` | Real-data delta-skill diagnostics (per-pixel and within-granule correlation) |
 | `segment_skill_bootstrap.py` | Segment-level skill metric with granule-clustered bootstrap CI |
+| `segment_size_sensitivity.py` | Segment-level skill re-aggregated at 0.10/0.25/0.50 degree grids, robustness check on aggregation scale |
 | `build_real_pairs.py` | Real (track, background) pair construction for fine-tuning |
 | `finetune_real_pairs.py` | Real-pair fine-tuning of the pair-consistency objective |
 | `finetune_eval.py` | Held-out delta-skill evaluation of the fine-tuned model |
