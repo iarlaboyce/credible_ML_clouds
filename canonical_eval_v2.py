@@ -32,6 +32,7 @@ from sklearn.metrics import r2_score, mean_absolute_error
 
 from model_exp import API_VAE
 from neural_surrogate import SurrogateRTM
+from plot_style import apply_style, panel_label, stats_box, SAVE_KW
 
 BASE       = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR   = os.path.join(BASE, 'data')
@@ -266,11 +267,7 @@ boot = {
 }
 
 # figures
-plt.rcParams.update({
-    'font.size': 17, 'axes.labelsize': 19, 'xtick.labelsize': 15,
-    'ytick.labelsize': 15, 'axes.linewidth': 1.3,
-    'axes.spines.top': False, 'axes.spines.right': False,
-})
+apply_style()
 sub = rng.choice(n, size=min(3000, n), replace=False)
 
 fig, axes = plt.subplots(2, 2, figsize=(11, 10))
@@ -278,7 +275,7 @@ axes = axes.flatten()
 lims = (float(min(re_true.min(), 8)), float(re_true.max() + 0.5))
 names = [('Naive', re_naive), ('Mean correction', re_mean),
          ('MLP', re_mlp), ('API-VAE', re_vae)]
-for ax, (name, pred) in zip(axes, names):
+for i, (ax, (name, pred)) in enumerate(zip(axes, names)):
     sc = ax.scatter(re_true[sub], pred[sub], c=tau_pol[sub], cmap='viridis',
                     s=8, alpha=0.45, rasterized=True)
     ax.plot(lims, lims, 'k--', lw=1.8)
@@ -287,12 +284,8 @@ for ax, (name, pred) in zip(axes, names):
     ax.set_ylabel(r'Predicted $r_e^{\mathrm{clean}}$ (µm)')
     m = re_metrics[{'Naive': 'naive', 'Mean correction': 'mean',
                     'MLP': 'mlp', 'API-VAE': 'apivae'}[name]]
-    ax.text(0.05, 0.96, name, transform=ax.transAxes, fontsize=18,
-            va='top', fontweight='bold')
-    ax.text(0.05, 0.87, f"MAE = {m['mae']:.2f} µm\n$R^2$ = {m['r2']:.3f}",
-            transform=ax.transAxes, fontsize=15, va='top',
-            bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
-                      edgecolor='#cccccc', alpha=0.85))
+    panel_label(ax, i)
+    stats_box(ax, f"MAE = {m['mae']:.2f} µm\n$R^2$ = {m['r2']:.3f}")
 fig.subplots_adjust(left=0.09, right=0.88, hspace=0.35, wspace=0.32)
 cax = fig.add_axes([0.91, 0.12, 0.025, 0.76])
 cb  = fig.colorbar(sc, cax=cax)
